@@ -1,0 +1,47 @@
+{
+  "name": "openwallet-api",
+  "version": "1.0.0",
+  "description": "OpenBanking based money management app - API Layer",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "jest",
+    "start:dev": "NODE_ENV=development webpack",
+    "run:dev": "NODE_ENV=development nodemon dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrownKnight/OpenWallet-api.git"
+  },
+  "keywords": [
+    "openbanking",
+    "banking",
+    "money",
+    "management"
+  ],
+  "author": "Aman",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/BrownKnight/OpenWallet-api/issues"
+  },
+  "homepage": "https://github.com/BrownKnight/OpenWallet-api#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.9",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "eslint": "^7.13.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "nodemon": "^2.0.6",
+    "prettier": "^2.1.2",
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.0.5",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-node-externals": "^2.5.2",
+    "webpack-shell-plugin": "^0.5.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

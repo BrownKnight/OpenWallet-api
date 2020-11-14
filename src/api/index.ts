@@ -1,8 +1,11 @@
 import express from "express";
 import { Request, Response } from "express";
+import { initDb } from "../db/db.js";
 
 const app = express();
 const { PORT = 3000 } = process.env;
+
+await initDb();
 
 app.get("/", (req: Request, res: Response) => {
   res.send({

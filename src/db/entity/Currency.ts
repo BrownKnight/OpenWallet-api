@@ -1,9 +1,9 @@
 import pkg from "typeorm";
-import { BaseEntity } from "./OWEntity.js";
+import { OWEntity } from "./OWEntity.js";
 const { Column, Entity } = pkg;
 
 @Entity()
-export class Currency extends BaseEntity {
+export class Currency extends OWEntity {
   @Column({ type: "character varying" })
   currencyCode?: string;
 

@@ -1,11 +1,11 @@
 import pkg from "typeorm";
 import { CredentialsType } from "./enum/CredentialsType.js";
 import { DataSource } from "./enum/DataSource.js";
-import { BaseEntity } from "./OWEntity.js";
+import { OWEntity } from "./OWEntity.js";
 const { Column, Entity } = pkg;
 
 @Entity()
-export class Institution extends BaseEntity {
+export class Institution extends OWEntity {
   @Column({ type: "character varying", nullable: true })
   external_id?: string;
 

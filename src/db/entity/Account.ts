@@ -1,10 +1,10 @@
 import pkg from "typeorm";
 import { Institution } from "./Institution.js";
-import { BaseEntity } from "./OWEntity.js";
+import { OWEntity } from "./OWEntity.js";
 const { Column, Entity, ManyToOne } = pkg;
 
 @Entity()
-export class Account extends BaseEntity {
+export class Account extends OWEntity {
   @Column({ type: "character varying", nullable: true })
   external_id?: string;
 

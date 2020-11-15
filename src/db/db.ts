@@ -1,6 +1,9 @@
 import pkg from "typeorm";
-const { createConnection } = pkg;
+import { Account } from "./entity/Account.js";
+import { Currency } from "./entity/Currency.js";
+import { Transaction } from "./entity/Transaction.js";
 import { Institution } from "./entity/Institution.js";
+const { createConnection } = pkg;
 
 export async function initDb(): Promise<void> {
   console.log(
@@ -13,7 +16,7 @@ export async function initDb(): Promise<void> {
     username: process.env.OW_DATABASE_USERNAME,
     password: process.env.OW_DATABASE_PASSWORD,
     database: process.env.OW_DATABASE_NAME,
-    entities: [Institution],
+    entities: [Institution, Account, Currency, Transaction],
     synchronize: true,
     //logging: true,
   })

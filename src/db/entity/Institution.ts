@@ -6,7 +6,7 @@ const { Column, Entity } = pkg;
 
 @Entity()
 export class Institution extends BaseEntity {
-  @Column({ type: "character varying" })
+  @Column({ type: "character varying", nullable: true })
   external_id?: string;
 
   @Column({ type: "character varying" })

@@ -21,7 +21,7 @@ beforeEach(async () => {
 describe("CRUD DAO Operations", () => {
   it("Can save and fetch (by id) entities to the database", async () => {
     const dao = new InstitutionDAO();
-    const entity: Institution = new TestData().institutions[0];
+    const entity: Institution = TestData.institutions[0];
 
     const savedEntity = await dao.save(entity);
     expect(savedEntity).not.toBeNull();
@@ -36,7 +36,7 @@ describe("CRUD DAO Operations", () => {
 
   it("Can find entities by its properties", async () => {
     const dao = new InstitutionDAO();
-    const entities: Institution[] = new TestData().institutions;
+    const entities: Institution[] = TestData.institutions;
 
     dao.saveMultiple(entities);
     const entity = await dao.getByID(entities[0].id ?? 1);

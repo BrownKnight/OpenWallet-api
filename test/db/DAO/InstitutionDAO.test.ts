@@ -1,7 +1,7 @@
-import { InstitutionDAO } from "../../../src/db/DAO/InstitutionDAO";
-import { DBConnection } from "../../../src/db/db";
-import { Institution } from "../../../src/db/entity/Institution";
-import { TestData } from "../TestData";
+import { InstitutionDAO } from "@db/DAO/InstitutionDAO";
+import { DBConnection } from "@db/db";
+import { Institution } from "@db/entity/Institution";
+import { TestData } from "@test/db/TestData";
 
 //#region Jest hooks for test suites that use the DB
 beforeAll(async () => {

@@ -1,6 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
-import { DBConnection } from "../db/db";
+import { DBConnection } from "@db/db";
 
 const app = express();
 const { PORT = 3000 } = process.env;

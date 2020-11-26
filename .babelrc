@@ -1,7 +1,18 @@
 {
   "plugins": [
     ["@babel/plugin-proposal-decorators", { "decoratorsBeforeExport": true }],
-    ["@babel/plugin-proposal-class-properties"]
+    ["@babel/plugin-proposal-class-properties"],
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "@db": "./src/db",
+          "@api": "./src/api",
+          "@test": "./test"
+        }
+      }
+    ]
   ],
   "presets": [["@babel/preset-env", { "useBuiltIns": "usage", "corejs": 3 }], "@babel/preset-typescript"]
 }

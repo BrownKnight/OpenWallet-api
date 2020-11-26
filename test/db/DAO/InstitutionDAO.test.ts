@@ -12,7 +12,7 @@ afterAll(async () => {
   await DBConnection.close();
 });
 
-// Empty the
+// Empty all the db tables so each test has clean data to work with
 beforeEach(async () => {
   await DBConnection.clear();
 });

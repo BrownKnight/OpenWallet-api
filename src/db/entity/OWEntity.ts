@@ -1,5 +1,5 @@
-import pkg from "typeorm";
-const { PrimaryGeneratedColumn, UpdateDateColumn } = pkg;
+import { PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+//const { PrimaryGeneratedColumn, UpdateDateColumn } = pkg;
 
 /**
  * Base entity for all OpenWallet entities, providing consistent id's and dateModifed columns

@@ -1,8 +1,7 @@
-import pkg from "typeorm";
-import { CredentialsType } from "./enum/CredentialsType.js";
-import { DataSource } from "./enum/DataSource.js";
-import { OWEntity } from "./OWEntity.js";
-const { Column, Entity } = pkg;
+import { Column, Entity } from "typeorm";
+import { CredentialsType } from "./enum/CredentialsType";
+import { DataSource } from "./enum/DataSource";
+import { OWEntity } from "./OWEntity";
 
 @Entity()
 export class Institution extends OWEntity {

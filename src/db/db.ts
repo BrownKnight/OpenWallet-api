@@ -1,16 +1,15 @@
-import pkg from "typeorm";
-import { Account } from "./entity/Account.js";
-import { Currency } from "./entity/Currency.js";
-import { Transaction } from "./entity/Transaction.js";
-import { Institution } from "./entity/Institution.js";
-const { createConnection, getConnection } = pkg;
+import { createConnection, getConnection, Connection } from "typeorm";
+import { Account } from "./entity/Account";
+import { Currency } from "./entity/Currency";
+import { Transaction } from "./entity/Transaction";
+import { Institution } from "./entity/Institution";
 
 export class DBConnection {
   /**
    * Connect to the OpenWallet Database, using environment
    * variables to determine where to connect to
    */
-  static async init(): Promise<pkg.Connection | null> {
+  static async init(): Promise<Connection | null> {
     console.log(`Connecting to db at ${process.env.OW_DATABASE_HOST}:${process.env.OW_DATABASE_PORT}`);
     return await createConnection({
       type: "postgres",
@@ -23,7 +22,7 @@ export class DBConnection {
       synchronize: true,
       //logging: true,
     })
-      .then((conn: pkg.Connection) => {
+      .then((conn: Connection) => {
         console.log(
           `Conected to db ${process.env.OW_DATABASE_NAME} at ${process.env.OW_DATABASE_HOST}:${process.env.OW_DATABASE_PORT}`
         );
@@ -41,7 +40,7 @@ export class DBConnection {
   /**
    * Fetch the current connection to the db
    */
-  static get connection(): pkg.Connection {
+  static get connection(): Connection {
     return getConnection();
   }
 
@@ -53,12 +52,8 @@ export class DBConnection {
    * Mainly for testing purposes, clears all the tables for the entire db
    */
   static async clear(): Promise<void> {
-    const entities = this.connection.entityMetadatas;
-
-    entities.forEach(async (entity) => {
-      const repository = this.connection.getRepository(entity.name);
-      await repository.clear();
-    });
+    await this.connection.dropDatabase();
+    await this.connection.synchronize();
   }
 }
 

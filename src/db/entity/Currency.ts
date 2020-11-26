@@ -1,6 +1,5 @@
-import pkg from "typeorm";
-import { OWEntity } from "./OWEntity.js";
-const { Column, Entity } = pkg;
+import { Column, Entity } from "typeorm";
+import { OWEntity } from "./OWEntity";
 
 @Entity()
 export class Currency extends OWEntity {

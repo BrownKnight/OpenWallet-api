@@ -1,12 +1,12 @@
 import express from "express";
 import { Request, Response } from "express";
-import { DBConnection } from "@db/db";
+import { DB } from "@db/db";
 
 const app = express();
 const { PORT = 3000 } = process.env;
 
 (async function () {
-  DBConnection.init();
+  DB.init();
 })();
 
 app.get("/", (req: Request, res: Response) => {

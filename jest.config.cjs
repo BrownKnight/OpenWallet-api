@@ -12,5 +12,7 @@ module.exports = {
       tsconfig: "tsconfig.json",
     },
   },
-  setupFiles: ["dotenv/config"],
+  //setupFiles: ["<rootDir>/test/db/testSetup.ts"],
+  //globalSetup: "./test/db/testSetup.ts",
+  //setupFilesAfterEnv: ["./test/db/setupDBHooks.ts"],
 };

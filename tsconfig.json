@@ -46,6 +46,7 @@
     "paths": {
       "@api/*": ["./src/api/*"],
       "@db/*": ["./src/db/*"],
+      "@service/*": ["./src/service/*"],
       "@test/*": ["./test/*"]
     },
     // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */

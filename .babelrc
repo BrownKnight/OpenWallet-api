@@ -9,6 +9,7 @@
         "alias": {
           "@db": "./src/db",
           "@api": "./src/api",
+          "@service": "./src/service",
           "@test": "./test"
         }
       }

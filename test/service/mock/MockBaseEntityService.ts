@@ -1,12 +1,11 @@
 import { BaseDAO } from "@db/DAO/BaseDAO";
 import { OWEntity } from "@db/entity/OWEntity";
+import { BaseEntityService } from "@service/BaseEntityService";
 import { ServiceResponse } from "@service/ServiceResponse";
 
-export abstract class BaseEntityService<TEntity extends OWEntity> {
-  protected dao: BaseDAO<TEntity>;
-
+export abstract class MockBaseEntityService<TEntity extends OWEntity> extends BaseEntityService<TEntity> {
   constructor(entityDAO: new () => BaseDAO<TEntity>) {
-    this.dao = new entityDAO();
+    super(entityDAO);
   }
 
   async getAll(): Promise<ServiceResponse<TEntity>> {

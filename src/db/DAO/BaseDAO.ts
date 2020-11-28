@@ -1,4 +1,5 @@
-import { DeleteResult, FindManyOptions, FindOneOptions, getRepository, ObjectLiteral, Repository } from "typeorm";
+import { DB } from "@db/db";
+import { DeleteResult, FindManyOptions, FindOneOptions, ObjectLiteral, Repository } from "typeorm";
 
 /**
  * Basic DAO implementation, for other DAO's specific to the entity to derive from.
@@ -7,7 +8,7 @@ export class BaseDAO<TEntity extends ObjectLiteral> {
   protected _repository: Repository<TEntity>;
 
   constructor(entityClass: new () => TEntity) {
-    this._repository = getRepository<TEntity>(entityClass);
+    this._repository = DB.getRepository<TEntity>(entityClass);
   }
 
   async getAll(findOptions: FindManyOptions<TEntity> = {}): Promise<TEntity[]> {

@@ -6,8 +6,8 @@ import { PrimaryGeneratedColumn, UpdateDateColumn, ObjectLiteral } from "typeorm
  */
 export class OWEntity implements ObjectLiteral {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
   @UpdateDateColumn({ type: "timestamp" })
-  dateModified?: Date;
+  dateModified!: Date;
 }

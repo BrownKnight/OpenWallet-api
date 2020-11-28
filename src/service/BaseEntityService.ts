@@ -18,11 +18,13 @@ export abstract class BaseEntityService<TEntity extends OWEntity> {
   }
 
   async getById(id: number): Promise<ServiceResponse<TEntity>> {
-    const response = new ServiceResponse<TEntity>();
+    let response = new ServiceResponse<TEntity>();
 
     const entity = await this.dao.getByID(id);
     if (entity) {
       response.entities = [entity];
+    } else {
+      response = { ...response, success: false, errorCode: 404, errorMessage: `Could not find entity with ID ${id}` };
     }
 
     return response;

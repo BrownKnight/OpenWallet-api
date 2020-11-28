@@ -3,10 +3,17 @@ import { DeleteResult, FindManyOptions, FindOneOptions } from "typeorm";
 import { TestData } from "../TestData";
 
 export class MockBaseDAO<TEntity extends OWEntity> {
-  protected testData: TEntity[];
+  private entityClass: new () => TEntity;
+
+  private testData: TEntity[];
+
+  nextId(): number {
+    return TestData.instance.nextId(this.entityClass);
+  }
 
   constructor(entityClass: new () => TEntity) {
-    this.testData = new TestData().getData(entityClass);
+    this.entityClass = entityClass;
+    this.testData = TestData.instance.getData(entityClass);
   }
 
   async getAll(findOptions?: FindManyOptions<TEntity>): Promise<TEntity[]> {
@@ -35,7 +42,7 @@ export class MockBaseDAO<TEntity extends OWEntity> {
     if (existingEntity) {
       return existingEntity;
     } else {
-      const newEntity: TEntity = { id: this.nextId(), dateModified: new Date() } as TEntity;
+      const newEntity: TEntity = { id: this.nextId(), dateModified: new Date(), ...entity } as TEntity;
       this.testData.push(newEntity);
       return newEntity;
     }
@@ -50,13 +57,9 @@ export class MockBaseDAO<TEntity extends OWEntity> {
   async delete(entityId: number): Promise<DeleteResult> {
     const entityToDelete = await this.getByID(entityId);
     // This is probably the slowest way to do this, so definitely fix in the future
-    this.testData.filter((x) => x === entityToDelete);
+    this.testData = this.testData.filter((x) => x != entityToDelete);
     const deleteResult = new DeleteResult();
     deleteResult.affected = entityToDelete ? 1 : 0;
     return deleteResult;
-  }
-
-  nextId(): number {
-    return (this.testData.reduce((max, current) => ((current.id ?? 0) > (max.id ?? 0) ? current : max)).id ?? 100) + 1;
   }
 }

@@ -5,7 +5,15 @@ import { Institution } from "@db/entity/Institution";
 import { Transaction } from "@db/entity/Transaction";
 
 export class TestData {
-  currencies: Currency[] = [{ id: 1, currencyCode: "GBP", currencySymbol: "£", dateModified: new Date() }];
+  private static _instance: TestData | undefined;
+  static get instance(): TestData {
+    return this._instance || (this._instance = new TestData());
+  }
+
+  currencies: Currency[];
+  private constructor() {
+    this.currencies = [{ id: 1, currencyCode: "GBP", currencySymbol: "£", dateModified: new Date() }];
+  }
 
   getData<TEntity extends AnyOWEntity>(entityClass: new () => TEntity): TEntity[] {
     switch (entityClass) {
@@ -20,5 +28,12 @@ export class TestData {
     }
 
     return [];
+  }
+
+  nextId<TEntity extends AnyOWEntity>(entityClass: new () => TEntity): number {
+    return (
+      (this.getData(entityClass).reduce((max, current) => ((current.id ?? 0) > (max.id ?? 0) ? current : max)).id ??
+        100) + 1
+    );
   }
 }

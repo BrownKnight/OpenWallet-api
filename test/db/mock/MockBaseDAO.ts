@@ -57,7 +57,7 @@ export class MockBaseDAO<TEntity extends OWEntity> {
   async delete(entityId: number): Promise<DeleteResult> {
     const entityToDelete = await this.getByID(entityId);
     // This is probably the slowest way to do this, so definitely fix in the future
-    this.testData = this.testData.filter((x) => x != entityToDelete);
+    this.testData = this.testData.filter((x) => x.id != entityToDelete?.id);
     const deleteResult = new DeleteResult();
     deleteResult.affected = entityToDelete ? 1 : 0;
     return deleteResult;

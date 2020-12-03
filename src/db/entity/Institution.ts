@@ -9,11 +9,11 @@ export class Institution extends OWEntity {
   external_id?: string;
 
   @Column({ type: "character varying" })
-  fullName?: string;
+  fullName!: string;
 
   @Column({ type: "enum", enum: CredentialsType })
-  credentialsType?: CredentialsType;
+  credentialsType!: CredentialsType;
 
   @Column({ type: "enum", enum: DataSource })
-  dataSource?: DataSource;
+  dataSource!: DataSource;
 }

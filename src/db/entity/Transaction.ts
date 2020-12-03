@@ -8,8 +8,8 @@ export class Transaction extends OWEntity {
   external_id?: string;
 
   @ManyToOne(() => Currency)
-  currency?: Currency;
+  currency!: Currency;
 
   @Column({ type: "decimal" })
-  monetaryAmount?: number;
+  monetaryAmount!: number;
 }

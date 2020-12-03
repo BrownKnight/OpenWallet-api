@@ -8,8 +8,8 @@ export class Account extends OWEntity {
   external_id?: string;
 
   @Column({ type: "character varying" })
-  name?: string;
+  name!: string;
 
   @ManyToOne(() => Institution)
-  institution?: Institution;
+  institution!: Institution;
 }

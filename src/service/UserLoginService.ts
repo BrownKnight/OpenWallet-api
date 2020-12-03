@@ -8,17 +8,16 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
     super(UserLoginDAO);
   }
 
-  // Override getAll here to remove the password field
+  /** Fetches UserLogins with the user relation field loaded */
   async getAll(): Promise<ServiceResponse<UserLogin>> {
-    const response = await super.getAll();
-    response.entities.forEach((entity) => {
-      entity.password = "";
-    });
+    const response = new ServiceResponse<UserLogin>();
+
+    response.entities = await this.dao.getAll({ relations: ["user"] });
 
     return response;
   }
 
-  // Override getById here to remove the password field
+  /** Fetches UserLogin with the user relation field loaded */
   async getById(id: number): Promise<ServiceResponse<UserLogin>> {
     const response = await super.getById(id);
     response.entities.forEach((entity) => {

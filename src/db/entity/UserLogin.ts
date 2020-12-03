@@ -12,8 +12,8 @@ export class UserLogin extends OWEntity {
   @Column({ type: "character varying" })
   username!: string;
 
-  @Column({ type: "character varying" })
-  password!: string;
+  @Column({ type: "character varying", select: false })
+  password?: string;
 
   @BeforeInsert()
   @BeforeUpdate()

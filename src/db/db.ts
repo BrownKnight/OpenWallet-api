@@ -5,12 +5,13 @@ import { Transaction } from "./entity/Transaction";
 import { Institution } from "./entity/Institution";
 import { UserLogin } from "./entity/UserLogin";
 import { User } from "./entity/User";
+import { OWEntity } from "./entity/OWEntity";
 // import { IBackup, newDb } from "pg-mem";
 
 /**
  * Helper type containing all of the OWEntity's
  */
-export type AnyOWEntity = Account | Currency | Institution | Transaction | User | UserLogin;
+export type AnyOWEntity = Account | Currency | Institution | Transaction | User | UserLogin | OWEntity;
 
 class PostgresDB {
   /**

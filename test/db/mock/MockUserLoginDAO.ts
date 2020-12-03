@@ -1,7 +1,7 @@
 import { UserLogin } from "@db/entity/UserLogin";
-import { BaseDAO } from "@db/DAO/BaseDAO";
+import { MockBaseDAO } from "./MockBaseDAO";
 
-export class UserLoginDAO extends BaseDAO<UserLogin> {
+export class MockUserLoginDAO extends MockBaseDAO<UserLogin> {
   constructor() {
     super(UserLogin);
   }

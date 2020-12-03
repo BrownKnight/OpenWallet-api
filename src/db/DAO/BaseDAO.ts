@@ -1,10 +1,10 @@
-import { DB } from "@db/db";
+import { AnyOWEntity, DB } from "@db/db";
 import { DeleteResult, FindManyOptions, FindOneOptions, ObjectLiteral, Repository } from "typeorm";
 
 /**
  * Basic DAO implementation, for other DAO's specific to the entity to derive from.
  */
-export class BaseDAO<TEntity extends ObjectLiteral> {
+export class BaseDAO<TEntity extends AnyOWEntity & ObjectLiteral> {
   protected _repository: Repository<TEntity>;
 
   constructor(entityClass: new () => TEntity) {
@@ -19,7 +19,7 @@ export class BaseDAO<TEntity extends ObjectLiteral> {
     return this._repository.findOne(id, findOptions);
   }
 
-  async find(findOptions: FindOneOptions<TEntity>): Promise<TEntity | undefined> {
+  async find(findOptions?: FindOneOptions<TEntity>): Promise<Partial<TEntity> | undefined> {
     return this._repository.findOne(findOptions);
   }
 

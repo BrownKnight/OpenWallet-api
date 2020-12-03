@@ -1,8 +1,12 @@
+import { OWEntity } from "@db/entity/OWEntity";
 import { BaseEntityService } from "@service/BaseEntityService";
 import { Request, Response } from "express";
 import { BaseRouter } from "./BaseRouter";
 
-export abstract class EntityRouter<TEntity, TEntityService extends BaseEntityService<TEntity>> extends BaseRouter {
+export abstract class EntityRouter<
+  TEntity extends OWEntity,
+  TEntityService extends BaseEntityService<TEntity>
+> extends BaseRouter {
   protected entityService: TEntityService;
 
   constructor(entityService: new () => TEntityService) {

@@ -3,6 +3,7 @@ import { Account } from "@db/entity/Account";
 import { Currency } from "@db/entity/Currency";
 import { CredentialsType } from "@db/entity/enum/CredentialsType";
 import { DataSource } from "@db/entity/enum/DataSource";
+import { UserRole } from "@db/entity/enum/UserRole";
 import { Institution } from "@db/entity/Institution";
 import { OWEntity } from "@db/entity/OWEntity";
 import { Transaction } from "@db/entity/Transaction";
@@ -15,19 +16,25 @@ export class TestData {
     return this._instance || (this._instance = new TestData());
   }
 
-  currencies: Currency[];
-  institutions: Institution[];
-  transactions: Transaction[];
-  accounts: Account[];
-  users: User[];
-  userLogins: UserLogin[];
+  currencies: Currency[] = [];
+  institutions: Institution[] = [];
+  transactions: Transaction[] = [];
+  accounts: Account[] = [];
+  users: User[] = [];
+  userLogins: UserLogin[] = [];
   private constructor() {
-    this.currencies = [this.generateCurrency(), this.generateCurrency()];
-    this.institutions = [this.generateInstitution(), this.generateInstitution()];
-    this.transactions = [this.generateTransaction(), this.generateTransaction()];
-    this.accounts = [this.generateAccount(), this.generateAccount()];
-    this.userLogins = [this.generateUserLogin(), this.generateUserLogin()];
-    this.users = [this.generateUser(), this.generateUser()];
+    this.generateData(this.generateCurrency.bind(this), this.currencies, 2);
+    this.generateData(this.generateInstitution.bind(this), this.institutions, 2);
+    this.generateData(this.generateTransaction.bind(this), this.transactions, 2);
+    this.generateData(this.generateAccount.bind(this), this.accounts, 2);
+    this.generateData(this.generateUserLogin.bind(this), this.userLogins, 2);
+    this.generateData(this.generateUser.bind(this), this.users, 2);
+  }
+
+  private generateData<TEntity>(generator: () => TEntity, array: TEntity[], num: number) {
+    for (let i = 0; i < num; i++) {
+      array.push(generator());
+    }
   }
 
   getData<TEntity extends AnyOWEntity>(entityClass: new () => TEntity): TEntity[] {
@@ -50,10 +57,11 @@ export class TestData {
   }
 
   nextId<TEntity extends AnyOWEntity>(entityClass: new () => TEntity): number {
-    return (
-      (this.getData(entityClass)?.reduce((max, current) => ((current.id ?? 0) > (max.id ?? 0) ? current : max))?.id ??
-        100) + 1
-    );
+    const data = this.getData(entityClass);
+    if (data.length > 0) {
+      return data.reduce((max, current) => (current.id > max ? current.id : max), 0) + 1;
+    }
+    return 101;
   }
 
   generateOWEntity(entityClass: new () => AnyOWEntity): OWEntity {
@@ -110,18 +118,24 @@ export class TestData {
 
   /** For desired functionality, should always be run before generateUser */
   generateUserLogin(): UserLogin {
+    let newUserLogin = new UserLogin();
     const newOWEntity = this.generateOWEntity(UserLogin);
     const id = newOWEntity.id;
-    return {
+    newUserLogin = {
+      ...newUserLogin,
       ...newOWEntity,
       username: `TESTUSER${id}@OpenWallet.email`,
       password: "TESTPASSWORD",
+      userRole: UserRole.STANDARD,
       user: {
         ...newOWEntity,
         emailAddress: `TESTUSER${id}@OpenWallet.email`,
         firstName: `FIRSTNAME${id}`,
         lastName: `LASTNAME${id}`,
       },
+      encryptPassword: newUserLogin.encryptPassword,
     };
+    newUserLogin.encryptPassword?.();
+    return newUserLogin;
   }
 }

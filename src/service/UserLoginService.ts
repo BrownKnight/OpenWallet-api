@@ -6,10 +6,13 @@ import bcrypt from "bcrypt";
 import { LoginResponse } from "./responses/LoginResponse";
 import jwt from "jsonwebtoken";
 import fs from "fs";
+import { UserRole } from "@db/entity/enum/UserRole";
 
 export class UserLoginService extends BaseEntityService<UserLogin> {
+  private userLoginDAO;
   constructor() {
     super(UserLoginDAO);
+    this.userLoginDAO = new UserLoginDAO();
   }
 
   /** Fetches UserLogins with the user relation field loaded */
@@ -40,7 +43,7 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
     const unauthorisedResponse = new LoginResponse(false, 401, "Username or Password did not match");
 
     // Find the user by their username
-    const userLogin = await (this.dao as UserLoginDAO).getByUsername(username);
+    const userLogin = await this.userLoginDAO.getByUsername(username);
     if (!userLogin || !userLogin.id || !userLogin.username || !userLogin.password) {
       return unauthorisedResponse;
     }
@@ -57,9 +60,18 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
       return { ...unauthorisedResponse, errorMessage: "Authenticated, but could not generate token" };
     }
 
-    successResponse.token = token;
+    return { ...successResponse, token: token };
+  }
 
-    return successResponse;
+  async loginWithToken(token: string): Promise<LoginResponse> {
+    const response = new LoginResponse();
+
+    const verifiedTokenPayload = this.verifyToken(token);
+    if (!verifiedTokenPayload) {
+      return { ...response, success: false, errorCode: 400, errorMessage: "Could not verify token" };
+    }
+
+    return { ...response, token: token, user: verifiedTokenPayload };
   }
 
   private async generateAuthToken(userId: number): Promise<string | null> {
@@ -87,21 +99,27 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
     );
 
     // Now that we've generated the token, save it against the user
-    userLogin.webToken = token;
     // Create a new object for the save so we don't save the password
-    this.save({ id: userLogin.id, webToken: userLogin.webToken });
+    this.save({ id: userLogin.id, webToken: token });
 
     return token;
   }
 
-  verifyToken(token: string): boolean {
+  private verifyToken(token: string): TokenPayload | null {
     const publicKey = fs.readFileSync("authkey.pub", "utf-8");
     try {
-      jwt.verify(token, publicKey);
+      return jwt.verify(token, publicKey) as TokenPayload;
     } catch (err) {
-      return false;
+      return null;
     }
-
-    return true;
   }
 }
+
+export type TokenPayload = {
+  id: number;
+  username: string;
+  user: {
+    firstName: string;
+  };
+  userRole: UserRole;
+};

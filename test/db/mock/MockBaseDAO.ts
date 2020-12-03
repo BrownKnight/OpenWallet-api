@@ -1,5 +1,5 @@
 import { OWEntity } from "@db/entity/OWEntity";
-import { DeleteResult, FindManyOptions, FindOneOptions } from "typeorm";
+import { DeleteResult, FindManyOptions, FindOneOptions, ObjectLiteral } from "typeorm";
 import { TestData } from "../TestData";
 
 export class MockBaseDAO<TEntity extends OWEntity> {
@@ -28,19 +28,44 @@ export class MockBaseDAO<TEntity extends OWEntity> {
     return this.testData.find((x) => x.id === id);
   }
 
-  async find(findOptions?: FindOneOptions<TEntity>): Promise<TEntity | undefined> {
+  async find(findOptions?: FindOneOptions<TEntity>): Promise<Partial<TEntity> | undefined> {
+    let foundEntities = this.testData;
+
+    // Filter by each of the keys in the findOptions where clause
+    if (findOptions?.where) {
+      Object.keys(findOptions.where).forEach((key) => {
+        foundEntities = foundEntities.filter(
+          (x) => x[key as keyof TEntity] === (findOptions.where as ObjectLiteral)[key]
+        );
+      });
+    }
+
+    if (findOptions?.select) {
+      foundEntities = foundEntities.map((foundEntity) => {
+        const newEntity: TEntity = {} as TEntity;
+        findOptions.select?.forEach((selectedProperty) => {
+          newEntity[selectedProperty] = foundEntity[selectedProperty];
+        });
+
+        return newEntity;
+      });
+    }
     if (findOptions?.relations) {
       // TODO: Manage test data with various relations included/excluded
       // TODO: Implement support for the FindOptions where condition
-      return this.testData[0];
+      return foundEntities[0];
     }
-    return this.testData[0];
+    return foundEntities[0];
   }
 
   async save(entity: Partial<TEntity>): Promise<TEntity> {
     const existingEntityIndex = this.testData.findIndex((x) => x.id === entity.id);
-    if (existingEntityIndex) {
-      this.testData[existingEntityIndex] = { dateModified: new Date(), ...entity } as TEntity;
+    if (existingEntityIndex !== -1) {
+      this.testData[existingEntityIndex] = {
+        ...this.testData[existingEntityIndex],
+        ...entity,
+        dateModified: new Date(),
+      } as TEntity;
       return this.testData[existingEntityIndex];
     } else {
       const newEntity: TEntity = { id: this.nextId(), dateModified: new Date(), ...entity } as TEntity;
@@ -62,5 +87,9 @@ export class MockBaseDAO<TEntity extends OWEntity> {
     const deleteResult = new DeleteResult();
     deleteResult.affected = entityToDelete ? 1 : 0;
     return deleteResult;
+  }
+
+  getProperty<T, K extends keyof T>(o: T, propertyName: K): T[K] {
+    return o[propertyName]; // o[propertyName] is of type T[K]
   }
 }

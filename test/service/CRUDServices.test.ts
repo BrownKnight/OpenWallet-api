@@ -1,7 +1,10 @@
 import { AnyOWEntity } from "@db/db";
 import { OWEntity } from "@db/entity/OWEntity";
+import { AccountService } from "@service/AccountService";
 import { BaseEntityService } from "@service/BaseEntityService";
 import { CurrencyService } from "@service/CurrencyService";
+import { InstitutionService } from "@service/InstitutionService";
+import { TransactionService } from "@service/TransactionService";
 import { MockBaseDAO } from "@test/db/mock/MockBaseDAO";
 import { TestData } from "@test/db/TestData";
 
@@ -15,6 +18,9 @@ jest.mock("@db/DAO/BaseDAO", () => {
 
 describe.each([
   [CurrencyService, TestData.instance.currencies, TestData.instance.generateCurrency.bind(TestData.instance)],
+  [InstitutionService, TestData.instance.institutions, TestData.instance.generateInstitution.bind(TestData.instance)],
+  [AccountService, TestData.instance.accounts, TestData.instance.generateAccount.bind(TestData.instance)],
+  [TransactionService, TestData.instance.transactions, TestData.instance.generateTransaction.bind(TestData.instance)],
 ])(
   `Basic CRUD Functions for %p`,
   (serviceClass: new () => BaseEntityService<OWEntity>, testData: OWEntity[], entityGenerator: () => AnyOWEntity) => {
@@ -25,7 +31,7 @@ describe.each([
       expect(response).not.toBeNull();
       expect(response.success).toBe(true);
       expect(response.entities?.length).toBeGreaterThan(0);
-      expect(response.entities?.[0]).toEqual(TestData.instance.currencies[0]);
+      expect(response.entities?.[0]).toEqual(testData[0]);
     });
 
     it(`Can retrieve an entity by it's ID`, async () => {

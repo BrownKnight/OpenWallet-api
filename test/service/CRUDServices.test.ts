@@ -5,6 +5,8 @@ import { BaseEntityService } from "@service/BaseEntityService";
 import { CurrencyService } from "@service/CurrencyService";
 import { InstitutionService } from "@service/InstitutionService";
 import { TransactionService } from "@service/TransactionService";
+import { UserLoginService } from "@service/UserLoginService";
+import { UserService } from "@service/UserService";
 import { MockBaseDAO } from "@test/db/mock/MockBaseDAO";
 import { TestData } from "@test/db/TestData";
 
@@ -21,6 +23,8 @@ describe.each([
   [InstitutionService, TestData.instance.institutions, TestData.instance.generateInstitution.bind(TestData.instance)],
   [AccountService, TestData.instance.accounts, TestData.instance.generateAccount.bind(TestData.instance)],
   [TransactionService, TestData.instance.transactions, TestData.instance.generateTransaction.bind(TestData.instance)],
+  [UserService, TestData.instance.users, TestData.instance.generateUser.bind(TestData.instance)],
+  [UserLoginService, TestData.instance.userLogins, TestData.instance.generateUserLogin.bind(TestData.instance)],
 ])(
   `Basic CRUD Functions for %p`,
   (serviceClass: new () => BaseEntityService<OWEntity>, testData: OWEntity[], entityGenerator: () => AnyOWEntity) => {

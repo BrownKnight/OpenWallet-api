@@ -3,12 +3,14 @@ import { Account } from "./entity/Account";
 import { Currency } from "./entity/Currency";
 import { Transaction } from "./entity/Transaction";
 import { Institution } from "./entity/Institution";
+import { UserLogin } from "./entity/UserLogin";
+import { User } from "./entity/User";
 // import { IBackup, newDb } from "pg-mem";
 
 /**
  * Helper type containing all of the OWEntity's
  */
-export type AnyOWEntity = Account | Currency | Institution | Transaction;
+export type AnyOWEntity = Account | Currency | Institution | Transaction | User | UserLogin;
 
 class PostgresDB {
   /**
@@ -24,7 +26,7 @@ class PostgresDB {
       username: process.env.OW_DATABASE_USERNAME,
       password: process.env.OW_DATABASE_PASSWORD,
       database: process.env.OW_DATABASE_NAME,
-      entities: [Institution, Account, Currency, Transaction],
+      entities: [Account, Currency, Institution, Transaction, User, UserLogin],
       synchronize: true,
       //logging: true,
     })

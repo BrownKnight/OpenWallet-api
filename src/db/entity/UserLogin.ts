@@ -15,6 +15,9 @@ export class UserLogin extends OWEntity {
   @Column({ type: "character varying", select: false })
   password?: string;
 
+  @Column({ type: "character varying", select: false, nullable: true })
+  webToken?: string;
+
   @BeforeInsert()
   @BeforeUpdate()
   encryptPassword?(): void {

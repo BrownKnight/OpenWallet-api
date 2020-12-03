@@ -9,6 +9,6 @@ export class User extends OWEntity {
   @Column({ type: "character varying" })
   lastName!: string;
 
-  @Column({ type: "character varying" })
+  @Column({ type: "character varying", unique: true })
   emailAddress!: string;
 }

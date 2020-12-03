@@ -1,6 +1,6 @@
 import { BaseDAO } from "@db/DAO/BaseDAO";
 import { OWEntity } from "@db/entity/OWEntity";
-import { ServiceResponse } from "@service/ServiceResponse";
+import { ServiceResponse } from "@service/responses/ServiceResponse";
 
 export abstract class BaseEntityService<TEntity extends OWEntity> {
   protected dao: BaseDAO<TEntity>;

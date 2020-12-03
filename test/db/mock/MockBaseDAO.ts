@@ -38,9 +38,10 @@ export class MockBaseDAO<TEntity extends OWEntity> {
   }
 
   async save(entity: Partial<TEntity>): Promise<TEntity> {
-    const existingEntity = this.testData.find((x) => x.id === entity.id);
-    if (existingEntity) {
-      return existingEntity;
+    const existingEntityIndex = this.testData.findIndex((x) => x.id === entity.id);
+    if (existingEntityIndex) {
+      this.testData[existingEntityIndex] = { dateModified: new Date(), ...entity } as TEntity;
+      return this.testData[existingEntityIndex];
     } else {
       const newEntity: TEntity = { id: this.nextId(), dateModified: new Date(), ...entity } as TEntity;
       this.testData.push(newEntity);

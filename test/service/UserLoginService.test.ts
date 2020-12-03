@@ -41,4 +41,39 @@ describe("User Login Service", () => {
     expect(tokenLoginResponse.token).not.toBeFalsy();
     expect(tokenLoginResponse.user).toBeDefined();
   });
+
+  it("rejects a login with an incorrect username", async () => {
+    const service = new UserLoginService();
+    const invalidUserLogin = { username: "INVALID", password: "TESTPASSWORD" };
+
+    const loginResponse = await service.login(invalidUserLogin.username, invalidUserLogin.password as string);
+
+    expect(loginResponse).not.toBeNull();
+    expect(loginResponse.success).toBe(false);
+    expect(loginResponse.errorCode).toBe(401);
+    expect(loginResponse.token).not.toBeDefined();
+  });
+
+  it("rejects a login with an incorrect password", async () => {
+    const service = new UserLoginService();
+    const invalidUserLogin = { ...TestData.instance.userLogins[0], password: "INVALID" };
+
+    const loginResponse = await service.login(invalidUserLogin.username, invalidUserLogin.password as string);
+
+    expect(loginResponse).not.toBeNull();
+    expect(loginResponse.success).toBe(false);
+    expect(loginResponse.errorCode).toBe(401);
+    expect(loginResponse.token).not.toBeDefined();
+  });
+
+  it("rejects verifies a bad token", async () => {
+    const service = new UserLoginService();
+
+    const tokenLoginResponse = await service.loginWithToken("INVALID");
+    expect(tokenLoginResponse).not.toBeNull();
+    expect(tokenLoginResponse.success).toBe(false);
+    expect(tokenLoginResponse.errorCode).toBe(401);
+    expect(tokenLoginResponse.token).not.toBeDefined();
+    expect(tokenLoginResponse.user).not.toBeDefined();
+  });
 });

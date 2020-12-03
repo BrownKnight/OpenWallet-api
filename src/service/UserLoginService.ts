@@ -68,7 +68,7 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
 
     const verifiedTokenPayload = this.verifyToken(token);
     if (!verifiedTokenPayload) {
-      return { ...response, success: false, errorCode: 400, errorMessage: "Could not verify token" };
+      return { ...response, success: false, errorCode: 401, errorMessage: "Could not verify token" };
     }
 
     return { ...response, token: token, user: verifiedTokenPayload };

@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn, UpdateDateColumn, ObjectLiteral } from "typeorm";
+import { PrimaryGeneratedColumn, UpdateDateColumn, ObjectLiteral, Column } from "typeorm";
 //const { PrimaryGeneratedColumn, UpdateDateColumn } = pkg;
 
 /**
@@ -10,4 +10,11 @@ export class OWEntity implements ObjectLiteral {
 
   @UpdateDateColumn({ type: "timestamp" })
   dateModified!: Date;
+
+  /**
+   * Every entity is scoped to a specific userId, and only a user with that id can fetch/delete it.
+   * A null user id implies it is a system-level entity, so can be managed only by Admins.
+   * */
+  @Column({ type: "int" })
+  userId!: number;
 }

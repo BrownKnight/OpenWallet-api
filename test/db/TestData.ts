@@ -65,7 +65,7 @@ export class TestData {
   }
 
   generateOWEntity(entityClass: new () => AnyOWEntity): OWEntity {
-    return { id: this.nextId(entityClass), dateModified: new Date() };
+    return { id: this.nextId(entityClass), dateModified: new Date(), userId: 101 };
   }
 
   generateCurrency(): Currency {

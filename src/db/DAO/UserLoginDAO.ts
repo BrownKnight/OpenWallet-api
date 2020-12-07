@@ -8,7 +8,7 @@ export class UserLoginDAO extends BaseDAO<UserLogin> {
 
   async getByUsername(username: string): Promise<Partial<UserLogin> | undefined> {
     return await this.find({
-      select: ["id", "username", "password"],
+      select: ["id", "username", "password", "userRole"],
       where: { username: username },
     });
   }

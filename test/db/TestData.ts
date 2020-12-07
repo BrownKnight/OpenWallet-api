@@ -126,7 +126,8 @@ export class TestData {
       ...newOWEntity,
       username: `TESTUSER${id}@OpenWallet.email`,
       password: "TESTPASSWORD",
-      userRole: UserRole.STANDARD,
+      // All odd id's are ADMIN's
+      userRole: id % 2 === 0 ? UserRole.STANDARD : UserRole.ADMIN,
       user: {
         ...newOWEntity,
         emailAddress: `TESTUSER${id}@OpenWallet.email`,

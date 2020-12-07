@@ -25,12 +25,12 @@ export abstract class EntityRouter<
 
   abstract initRoutes(): void;
 
-  async getAll(req: Request, res: Response): Promise<void> {
+  protected async getAll(req: Request, res: Response): Promise<void> {
     const serviceResponse = await this.entityService.getAll();
     res.status(serviceResponse.errorCode ?? 200).json(serviceResponse);
   }
 
-  async getById(req: Request, res: Response): Promise<void> {
+  protected async getById(req: Request, res: Response): Promise<void> {
     const entityIdString = req.params["entityId"];
     const entityId = parseInt(entityIdString, 10);
 
@@ -43,7 +43,7 @@ export abstract class EntityRouter<
     res.status(serviceResponse.errorCode ?? 200).json(serviceResponse);
   }
 
-  async save(req: Request, res: Response): Promise<void> {
+  protected async save(req: Request, res: Response): Promise<void> {
     const body = req.body;
     if (body == null || body == "") {
       res.status(400).json(new ServiceResponse(false, undefined, undefined, 400, "Invalid entity in body"));
@@ -60,7 +60,7 @@ export abstract class EntityRouter<
     res.status(serviceResponse.errorCode ?? 201).json(serviceResponse);
   }
 
-  async deleteById(req: Request, res: Response): Promise<void> {
+  protected async deleteById(req: Request, res: Response): Promise<void> {
     const entityIdString = req.params["entityId"];
     const entityId = parseInt(entityIdString, 10);
 

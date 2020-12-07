@@ -1,6 +1,6 @@
 {
   "name": "openwallet-api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "OpenBanking based money management app - API Layer",
   "main": "dist/index.js",
   "scripts": {

@@ -35,9 +35,9 @@ beforeAll(async () => {
 
 describe.each([
   ["/api/v1/currencies", testDataInstance.currencies, testDataInstance.generateCurrency.bind(testDataInstance)],
-  // ["/api/v1/institutions", testData.institutions, testData.generateInstitution.bind(testData)],
-  // ["/api/v1/accounts", testData.accounts, testData.generateAccount.bind(testData)],
-  // ["/api/v1/transactions", testData.transactions, testData.generateTransaction.bind(testData)],
+  ["/api/v1/institutions", testDataInstance.institutions, testDataInstance.generateInstitution.bind(testDataInstance)],
+  ["/api/v1/accounts", testDataInstance.accounts, testDataInstance.generateAccount.bind(testDataInstance)],
+  ["/api/v1/transactions", testDataInstance.transactions, testDataInstance.generateTransaction.bind(testDataInstance)],
   // ["/api/v1/users", testData.users, testData.generateUser.bind(testData)],
 ])(`Basic CRUD Functions for %p`, (apiEndpoint: string, testData: OWEntity[], entityGenerator: () => AnyOWEntity) => {
   it("Can retrieve all entities", async () => {

@@ -38,7 +38,7 @@ describe.each([
   ["/api/v1/institutions", testDataInstance.institutions, testDataInstance.generateInstitution.bind(testDataInstance)],
   ["/api/v1/accounts", testDataInstance.accounts, testDataInstance.generateAccount.bind(testDataInstance)],
   ["/api/v1/transactions", testDataInstance.transactions, testDataInstance.generateTransaction.bind(testDataInstance)],
-  // ["/api/v1/users", testData.users, testData.generateUser.bind(testData)],
+  ["/api/v1/users", testDataInstance.users, testDataInstance.generateUser.bind(testDataInstance)],
 ])(`Basic CRUD Functions for %p`, (apiEndpoint: string, testData: OWEntity[], entityGenerator: () => AnyOWEntity) => {
   it("Can retrieve all entities", async () => {
     const req = request(app);

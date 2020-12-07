@@ -20,6 +20,6 @@ export class InstitutionsRouter extends EntityRouter<Institution, InstitutionSer
 
   @AdminOnly()
   protected async deleteById(req: Request, res: Response): Promise<void> {
-    super.save(req, res);
+    super.deleteById(req, res);
   }
 }

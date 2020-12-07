@@ -61,8 +61,12 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
     return { ...successResponse, token: token };
   }
 
-  async loginWithToken(token: string): Promise<LoginResponse> {
+  async loginWithToken(token: string | undefined): Promise<LoginResponse> {
     const response = new LoginResponse();
+
+    if (!token) {
+      return { ...response, success: false, errorCode: 401, errorMessage: "Token not provided" };
+    }
 
     const verifiedTokenPayload = this.verifyToken(token);
     if (!verifiedTokenPayload) {

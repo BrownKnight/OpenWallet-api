@@ -27,7 +27,7 @@ export class UserLogin extends OWEntity {
   encryptPassword?(): void {
     // If password is included in the request to update, then we assume its a new plaintext
     if (this.password) {
-      console.log(`Password present on entity ${this.id}, hashing it`);
+      // console.log(`Password present on entity ${this.id}, hashing it`);
       this.password = bcrypt.hashSync(this.password, 10);
     }
   }

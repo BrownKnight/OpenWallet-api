@@ -77,3 +77,69 @@ describe("User Login Service", () => {
     expect(tokenLoginResponse.user).not.toBeDefined();
   });
 });
+
+describe("User Login Service CRUD Operations", () => {
+  it("Can retrieve all user logins", async () => {
+    const service = new UserLoginService();
+    const response = await service.getAll();
+
+    expect(response).not.toBeNull();
+    expect(response.success).toBe(true);
+    expect(response.entities?.length).toBeGreaterThan(0);
+    expect(response.entities?.[0]).toEqual(TestData.instance.userLogins[0]);
+  });
+
+  it(`Can retrieve an user login by it's ID`, async () => {
+    const service = new UserLoginService();
+    const entity = TestData.instance.userLogins[0];
+
+    const response = await service.getById(entity.id ?? 0);
+
+    delete entity.password;
+    delete entity.webToken;
+
+    expect(response).not.toBeNull();
+    expect(response.success).toBe(true);
+    expect(response.entities?.[0]).toEqual(entity);
+  });
+
+  it("Can save an user login, then retrieve it", async () => {
+    const service = new UserLoginService();
+    const entity = TestData.instance.generateUserLogin();
+
+    const saveResponse = await service.save(entity);
+    const fetchResponse = await service.getById(entity.id ?? 0);
+
+    delete entity.password;
+    delete entity.webToken;
+
+    expect(saveResponse).not.toBeNull();
+    expect(saveResponse.success).toBe(true);
+    expect(saveResponse.entities?.[0]).toEqual(entity);
+
+    expect(fetchResponse).not.toBeNull();
+    expect(fetchResponse.success).toBe(true);
+    expect(fetchResponse.entities?.[0]).toEqual(entity);
+  });
+
+  it("Can delete a given user login using it's ID", async () => {
+    const service = new UserLoginService();
+    const entity = TestData.instance.userLogins[0];
+
+    const deleteResponse = await service.deleteById(entity.id ?? 0);
+    const fetchResponse = await service.getById(entity.id ?? 0);
+
+    delete entity.password;
+    delete entity.webToken;
+
+    expect(deleteResponse).not.toBeNull();
+    expect(deleteResponse.success).toBe(true);
+    expect(deleteResponse.entities?.[0]).toEqual(entity);
+
+    expect(fetchResponse).not.toBeNull();
+    expect(fetchResponse.success).toBe(false);
+    expect(fetchResponse.errorCode).toBe(404);
+    expect(fetchResponse.errorMessage).not.toBeNull();
+    expect(fetchResponse.entities?.length).toBe(0);
+  });
+});

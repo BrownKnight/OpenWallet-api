@@ -5,7 +5,7 @@ import { TestData } from "../TestData";
 export class MockBaseDAO<TEntity extends OWEntity> {
   private entityClass: new () => TEntity;
 
-  private testData: TEntity[];
+  protected testData: TEntity[];
 
   nextId(): number {
     return TestData.instance.nextId(this.entityClass);
@@ -52,7 +52,6 @@ export class MockBaseDAO<TEntity extends OWEntity> {
     }
     if (findOptions?.relations) {
       // TODO: Manage test data with various relations included/excluded
-      // TODO: Implement support for the FindOptions where condition
       return foundEntities[0];
     }
     return foundEntities[0];

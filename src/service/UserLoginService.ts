@@ -49,7 +49,7 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
     let token: string | null = null;
     if (await bcrypt.compare(password, userLogin.password)) {
       // Successful login, generate a token to put into the response, and save that to the entity
-      token = await this.generateAuthToken(userLogin.id);
+      token = await this.generateAuthToken(userLogin);
     } else {
       return unauthorisedResponse;
     }
@@ -76,14 +76,8 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
     return { ...response, token: token, user: verifiedTokenPayload };
   }
 
-  private async generateAuthToken(userId: number): Promise<string | null> {
-    const userLogin = (await this.getById(userId))?.entities[0];
-    if (!userLogin) {
-      console.error(`Could not find user to generate token for. UserID: ${userId}`);
-      return null;
-    }
-
-    console.log(`Generating token for user ID: ${userId}`);
+  private async generateAuthToken(userLogin: Partial<UserLogin>): Promise<string | null> {
+    if (process.env.NODE_ENV === "production") console.log(`Generating token for user ID: ${userLogin.id}`);
     const privateKey = fs.readFileSync("authkey", "utf-8");
 
     // Sign a token containing some limited user info, with the private key

@@ -3,7 +3,8 @@ import { Request, Response } from "express";
 import moment from "moment";
 
 export async function checkAuthenticated(req: Request, res: Response, next: () => void): Promise<void> {
-  console.log(`Incoming request for ${req.path} at ${moment().format("DD/MM HH:mm:ss")}`);
+  if (process.env.NODE_ENV === "production")
+    console.log(`Incoming request for ${req.path} at ${moment().format("DD/MM HH:mm:ss")}`);
 
   // If trying to access pages that don't require auth, then skip auth check
   if (req.path.startsWith("/api/v1/login") || req.path.startsWith("/api/docs")) {

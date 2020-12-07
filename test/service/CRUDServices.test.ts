@@ -5,15 +5,22 @@ import { BaseEntityService } from "@service/BaseEntityService";
 import { CurrencyService } from "@service/CurrencyService";
 import { InstitutionService } from "@service/InstitutionService";
 import { TransactionService } from "@service/TransactionService";
-import { UserLoginService } from "@service/UserLoginService";
 import { UserService } from "@service/UserService";
 import { MockBaseDAO } from "@test/db/mock/MockBaseDAO";
+import { MockUserLoginDAO } from "@test/db/mock/MockUserLoginDAO";
 import { TestData } from "@test/db/TestData";
 
 jest.mock("@db/DAO/BaseDAO", () => {
   return {
     BaseDAO: jest.fn().mockImplementation((entityClass) => {
       return new MockBaseDAO(entityClass);
+    }),
+  };
+});
+jest.mock("@db/DAO/UserLoginDAO", () => {
+  return {
+    UserLoginDAO: jest.fn().mockImplementation(() => {
+      return new MockUserLoginDAO();
     }),
   };
 });
@@ -24,7 +31,6 @@ describe.each([
   [AccountService, TestData.instance.accounts, TestData.instance.generateAccount.bind(TestData.instance)],
   [TransactionService, TestData.instance.transactions, TestData.instance.generateTransaction.bind(TestData.instance)],
   [UserService, TestData.instance.users, TestData.instance.generateUser.bind(TestData.instance)],
-  [UserLoginService, TestData.instance.userLogins, TestData.instance.generateUserLogin.bind(TestData.instance)],
 ])(
   `Basic CRUD Functions for %p`,
   (serviceClass: new () => BaseEntityService<OWEntity>, testData: OWEntity[], entityGenerator: () => AnyOWEntity) => {

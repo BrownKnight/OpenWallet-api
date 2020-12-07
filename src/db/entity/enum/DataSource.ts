@@ -1,4 +1,4 @@
 export enum DataSource {
-  LOCAL,
-  YAPILY,
+  LOCAL = "LOCAL",
+  YAPILY = "YAPILY",
 }

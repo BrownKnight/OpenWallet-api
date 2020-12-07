@@ -9,10 +9,8 @@ import fs from "fs";
 import { UserRole } from "@db/entity/enum/UserRole";
 
 export class UserLoginService extends BaseEntityService<UserLogin> {
-  private userLoginDAO;
   constructor() {
     super(UserLoginDAO);
-    this.userLoginDAO = new UserLoginDAO();
   }
 
   /** Fetches UserLogins with the user relation field loaded */
@@ -43,7 +41,7 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
     const unauthorisedResponse = new LoginResponse(false, 401, "Username or Password did not match");
 
     // Find the user by their username
-    const userLogin = await this.userLoginDAO.getByUsername(username);
+    const userLogin = await (this.dao as UserLoginDAO).getByUsername(username);
     if (!userLogin || !userLogin.id || !userLogin.username || !userLogin.password) {
       return unauthorisedResponse;
     }

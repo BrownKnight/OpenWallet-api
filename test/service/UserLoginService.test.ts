@@ -66,7 +66,7 @@ describe("User Login Service", () => {
     expect(loginResponse.token).not.toBeDefined();
   });
 
-  it("rejects verifies a bad token", async () => {
+  it("rejects a bad token", async () => {
     const service = new UserLoginService();
 
     const tokenLoginResponse = await service.loginWithToken("INVALID");

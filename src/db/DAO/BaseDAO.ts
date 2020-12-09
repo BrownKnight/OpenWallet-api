@@ -12,30 +12,30 @@ export class BaseDAO<TEntity extends AnyOWEntity & ObjectLiteral> {
   }
 
   async getAll(findOptions: FindManyOptions<TEntity> = {}): Promise<TEntity[]> {
-    return this._repository.find(findOptions);
+    return await this._repository.find(findOptions);
   }
 
   async getByID(id: number, findOptions: FindOneOptions<TEntity> = {}): Promise<TEntity | undefined> {
-    return this._repository.findOne(id, findOptions);
+    return await this._repository.findOne(id, findOptions);
   }
 
   async find(findOptions?: FindOneOptions<TEntity>): Promise<Partial<TEntity> | undefined> {
-    return this._repository.findOne(findOptions);
+    return await this._repository.findOne(findOptions);
   }
 
   async save(entity: Partial<TEntity>): Promise<TEntity> {
     // Create the entity from the request so that it calls BeforeInsert/BeforeUpdate correctly
     const dbEntity: TEntity = this._repository.create(entity);
-    return this._repository.save(dbEntity);
+    return await this._repository.save(dbEntity);
   }
 
   async saveMultiple(entities: Partial<TEntity>[]): Promise<TEntity[]> {
     // Create the entity from the request so that it calls BeforeInsert/BeforeUpdate correctly
-    const dbEntites = entities.map((entity) => this._repository.create(entity));
-    return this._repository.save(dbEntites);
+    const dbEntites = this._repository.create(entities);
+    return await this._repository.save(dbEntites);
   }
 
   async delete(entityId: number): Promise<DeleteResult> {
-    return this._repository.delete(entityId);
+    return await this._repository.delete(entityId);
   }
 }

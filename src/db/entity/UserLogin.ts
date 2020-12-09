@@ -16,7 +16,7 @@ export class UserLogin extends OWEntity {
   @Column({ type: "character varying", select: false })
   password?: string;
 
-  @Column({ type: "enum", enum: UserRole })
+  @Column({ type: "character varying" })
   userRole!: UserRole;
 
   @Column({ type: "character varying", select: false, nullable: true })

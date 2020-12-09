@@ -1,6 +1,6 @@
 import { OWEntity } from "@db/entity/OWEntity";
 import { DeleteResult, FindManyOptions, FindOneOptions, ObjectLiteral } from "typeorm";
-import { TestData } from "../TestData";
+import { MockTestData } from "./MockTestData";
 
 export class MockBaseDAO<TEntity extends OWEntity> {
   private entityClass: new () => TEntity;
@@ -8,12 +8,12 @@ export class MockBaseDAO<TEntity extends OWEntity> {
   protected testData: TEntity[];
 
   nextId(): number {
-    return TestData.instance.nextId(this.entityClass);
+    return MockTestData.instance.nextId(this.entityClass);
   }
 
   constructor(entityClass: new () => TEntity) {
     this.entityClass = entityClass;
-    this.testData = TestData.instance.getData(entityClass);
+    this.testData = MockTestData.instance.getData(entityClass);
   }
 
   async getAll(findOptions?: FindManyOptions<TEntity>): Promise<TEntity[]> {

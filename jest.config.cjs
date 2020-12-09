@@ -13,7 +13,7 @@ module.exports = {
       tsconfig: "tsconfig.json",
     },
   },
-  //setupFiles: ["<rootDir>/test/db/testSetup.ts"],
+  setupFiles: ["<rootDir>/test/setup.ts"],
   //globalSetup: "./test/db/testSetup.ts",
   //setupFilesAfterEnv: ["./test/db/setupDBHooks.ts"],
 };

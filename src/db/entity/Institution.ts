@@ -11,9 +11,9 @@ export class Institution extends OWEntity {
   @Column({ type: "character varying" })
   fullName!: string;
 
-  @Column({ type: "enum", enum: CredentialsType })
+  @Column({ type: "character varying" })
   credentialsType!: CredentialsType;
 
-  @Column({ type: "enum", enum: DataSource })
+  @Column({ type: "character varying" })
   dataSource!: DataSource;
 }

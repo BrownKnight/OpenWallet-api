@@ -3,17 +3,16 @@ import { Account } from "@db/entity/Account";
 import { Currency } from "@db/entity/Currency";
 import { CredentialsType } from "@db/entity/enum/CredentialsType";
 import { DataSource } from "@db/entity/enum/DataSource";
-import { UserRole } from "@db/entity/enum/UserRole";
 import { Institution } from "@db/entity/Institution";
 import { OWEntity } from "@db/entity/OWEntity";
 import { Transaction } from "@db/entity/Transaction";
 import { User } from "@db/entity/User";
 import { UserLogin } from "@db/entity/UserLogin";
 
-export class TestData {
-  private static _instance: TestData | undefined;
-  static get instance(): TestData {
-    return this._instance || (this._instance = new TestData());
+export class MockTestData {
+  private static _instance: MockTestData | undefined;
+  static get instance(): MockTestData {
+    return this._instance || (this._instance = new MockTestData());
   }
 
   currencies: Currency[] = [];
@@ -24,11 +23,9 @@ export class TestData {
   userLogins: UserLogin[] = [];
   private constructor() {
     this.generateData(this.generateCurrency.bind(this), this.currencies, 2);
-    this.generateData(this.generateInstitution.bind(this), this.institutions, 2);
-    this.generateData(this.generateTransaction.bind(this), this.transactions, 2);
-    this.generateData(this.generateAccount.bind(this), this.accounts, 2);
-    this.generateData(this.generateUserLogin.bind(this), this.userLogins, 2);
-    this.generateData(this.generateUser.bind(this), this.users, 2);
+    this.generateData(this.generateInstitution.bind(this), this.institutions, 1);
+    this.generateData(this.generateTransaction.bind(this), this.transactions, 1);
+    this.generateData(this.generateAccount.bind(this), this.accounts, 1);
   }
 
   private generateData<TEntity>(generator: () => TEntity, array: TEntity[], num: number) {
@@ -47,10 +44,6 @@ export class TestData {
         return this.accounts as TEntity[];
       case Transaction:
         return this.transactions as TEntity[];
-      case UserLogin:
-        return this.userLogins as TEntity[];
-      case User:
-        return this.users as TEntity[];
     }
     console.error(`Couldn't find test data for ${entityClass}!`);
     return [];
@@ -65,7 +58,7 @@ export class TestData {
   }
 
   generateOWEntity(entityClass: new () => AnyOWEntity): OWEntity {
-    return { id: this.nextId(entityClass), dateModified: new Date(), userId: 101 };
+    return { id: this.nextId(entityClass), dateModified: new Date(), owningUserId: 101 };
   }
 
   generateCurrency(): Currency {
@@ -103,40 +96,5 @@ export class TestData {
       institution: this.institutions[0],
       name: `TESTACCOUNT${id}`,
     };
-  }
-
-  generateUser(): User {
-    const newOWEntity = this.generateOWEntity(User);
-    const id = newOWEntity.id;
-    const existingUserLogin = this.userLogins.find((x) => x.id === id);
-    if (existingUserLogin) {
-      return existingUserLogin.user as User;
-    } else {
-      return this.generateUserLogin().user as User;
-    }
-  }
-
-  /** For desired functionality, should always be run before generateUser */
-  generateUserLogin(): UserLogin {
-    let newUserLogin = new UserLogin();
-    const newOWEntity = this.generateOWEntity(UserLogin);
-    const id = newOWEntity.id;
-    newUserLogin = {
-      ...newUserLogin,
-      ...newOWEntity,
-      username: `TESTUSER${id}@OpenWallet.email`,
-      password: "TESTPASSWORD",
-      // All odd id's are ADMIN's
-      userRole: id % 2 === 0 ? UserRole.STANDARD : UserRole.ADMIN,
-      user: {
-        ...newOWEntity,
-        emailAddress: `TESTUSER${id}@OpenWallet.email`,
-        firstName: `FIRSTNAME${id}`,
-        lastName: `LASTNAME${id}`,
-      },
-      encryptPassword: newUserLogin.encryptPassword,
-    };
-    newUserLogin.encryptPassword?.();
-    return newUserLogin;
   }
 }

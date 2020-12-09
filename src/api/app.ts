@@ -1,13 +1,8 @@
 import express from "express";
-import { DB } from "@db/db";
 import { checkAuthenticated } from "./middleware/checkAuthenticated";
 import { ApiV1Router } from "./v1/router";
 
 const app = express();
-
-(async function () {
-  DB.init();
-})();
 
 app.use(express.json());
 app.use(checkAuthenticated);

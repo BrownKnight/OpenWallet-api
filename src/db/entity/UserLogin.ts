@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne } from "typeorm";
 import { OWEntity } from "./OWEntity";
 import { User } from "./User";
 import bcrypt from "bcrypt";
@@ -7,6 +7,7 @@ import { UserRole } from "./enum/UserRole";
 @Entity()
 export class UserLogin extends OWEntity {
   @OneToOne(() => User)
+  @JoinColumn()
   user?: User;
 
   /** Should be the user's email address */

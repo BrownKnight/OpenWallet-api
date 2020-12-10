@@ -18,6 +18,7 @@ describe("Login API functionality", () => {
     const req = request(app);
     const res = await req.post("/api/v1/login").send({ username: "Admin", password: "TESTPASSWORD" });
     expect(res.status).toBe(200);
+    expect(res.body.token).not.toBeFalsy();
   });
 
   it("Returns a 401 with invalid credentials", async () => {
@@ -27,5 +28,6 @@ describe("Login API functionality", () => {
     const res = await req.post("/api/v1/login").send({ username: "INVALID", password: "INVALID" });
 
     expect(res.status).toBe(401);
+    expect(res.body.token).toBeFalsy();
   });
 });

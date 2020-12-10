@@ -1,3 +1,4 @@
+import { TokenPayload } from "@service/UserLoginService";
 import { Request, Response } from "express";
 
 export function getMockResponse(): Response {
@@ -12,10 +13,12 @@ export function getMockRequest({
   body = {},
   headers = {},
   path = "/random-endpoint",
+  user = undefined,
 }: {
   body?: { [key: string]: unknown };
   headers?: Request["headers"];
   path?: string;
+  user?: TokenPayload;
 }): Request {
   const reqMock: jest.Mock<Request> = jest.fn();
   const req = new reqMock();
@@ -23,6 +26,7 @@ export function getMockRequest({
   req.body = body;
   req.headers = headers;
   req.path = path;
+  req.user = user;
 
   return req;
 }

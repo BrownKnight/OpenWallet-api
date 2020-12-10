@@ -51,7 +51,7 @@ export abstract class BaseEntityService<TEntity extends OWEntity> {
   async deleteById(id: number): Promise<ServiceResponse<TEntity>> {
     const response = new ServiceResponse<TEntity>();
 
-    const entity = await this.dao.getByID(id);
+    const entity = (await this.getById(id)).entities[0];
     if (entity) {
       response.entities = [entity];
     }

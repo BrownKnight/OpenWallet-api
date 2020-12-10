@@ -82,8 +82,8 @@ export class As {
     this.generateInstitution();
     this.generateInstitution();
 
-    await this.currencyService.saveMultiple(this.currencies);
-    await this.institutionService.saveMultiple(this.institutions);
+    this.currencies = (await this.currencyService.saveMultiple(this.currencies)).entities;
+    this.institutions = (await this.institutionService.saveMultiple(this.institutions)).entities;
 
     return this;
   }
@@ -107,10 +107,31 @@ export class As {
     return [];
   }
 
+  generate<TEntity extends AnyOWEntity>(entityClass: new () => TEntity): this {
+    switch (entityClass) {
+      case Currency:
+        this.generateCurrency();
+        break;
+      case Institution:
+        this.generateInstitution();
+        break;
+      case Account:
+        this.generateAccount();
+        break;
+      case Transaction:
+        this.generateTransaction();
+        break;
+      default:
+        console.error(`Couldn't generate test data for ${entityClass}!`);
+    }
+    return this;
+  }
+
   generateCurrency(): this {
     this.currencies.push({
       currencyCode: `TEST${this.userId}-${this.currencies.length}`,
       currencySymbol: `T${this.userId}-${this.currencies.length}`,
+      owningUserId: this.userId,
     });
     return this;
   }
@@ -127,16 +148,18 @@ export class As {
 
   generateTransaction(): this {
     this.transactions.push({
-      currency: { id: this.currencies[0].id } as Currency,
+      currency: { id: As.standingDataInstance.currencies[0].id } as Currency,
       monetaryAmount: 10,
+      owningUserId: this.userId,
     });
     return this;
   }
 
   generateAccount(): this {
     this.accounts.push({
-      institution: { id: this.institutions[0].id } as Institution,
+      institution: { id: As.standingDataInstance.institutions[0].id } as Institution,
       name: `TESTACCOUNT${this.userId}-${this.accounts.length}`,
+      owningUserId: this.userId,
     });
     return this;
   }

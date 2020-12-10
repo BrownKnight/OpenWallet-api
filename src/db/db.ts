@@ -6,7 +6,7 @@ import { Institution } from "./entity/Institution";
 import { UserLogin } from "./entity/UserLogin";
 import { User } from "./entity/User";
 import { OWEntity } from "./entity/OWEntity";
-import { IBackup, newDb } from "pg-mem";
+import { IBackup, IMemoryDb, newDb } from "pg-mem";
 
 /**
  * Helper type containing all of the OWEntity's
@@ -72,12 +72,13 @@ class InMemoryPostgresDB {
   static backup: IBackup | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static orm: any;
+  static db: IMemoryDb;
 
   static async init(connectionName = ""): Promise<Connection | null> {
     if (connectionName == "") {
       connectionName = `connection_${process.env.JEST_WORKER_ID}`;
     }
-    console.log(`Connecting to in memory db ${connectionName}`);
+    if (process.env.TEST_LOGGING) console.log(`Connecting to in memory db ${connectionName}`);
     // if (this.orm && this.orm.isConnected && this.backup) {
     //   console.log("Restoring DB!");
     //   this.backup.restore();
@@ -86,11 +87,11 @@ class InMemoryPostgresDB {
     // await this.orm?.close();
 
     // create new instance
-    const db = newDb({
+    this.db = newDb({
       // 👉 Recommanded when using Typeorm .synchronize(), which creates foreign keys but not indices !
       autoCreateForeignKeyIndices: true,
     });
-    this.orm = await db.adapters.createTypeormConnection({
+    this.orm = await this.db.adapters.createTypeormConnection({
       type: "postgres",
       entities: [Account, Currency, Institution, Transaction, User, UserLogin],
       name: `database_${process.env.JEST_WORKER_ID}`,
@@ -99,23 +100,13 @@ class InMemoryPostgresDB {
     });
 
     if (!this.backup) {
-      console.log("Syncing DB Schema");
-      // this is the first test to run using this schema
-      // ... lets create your tables
-      //   (if you have thousands, this could be heavy)
+      if (process.env.TEST_LOGGING) console.log("Syncing DB Schema");
       await this.orm.synchronize();
-      console.log("Backup DB");
-      // Then, create a backup of this empty database with created schema
-      // nb: this is instantaneous (o(1))
-      this.backup = db.backup();
+      this.backupDB();
     } else {
-      // Okay, a previous test already create the DB schema
-      // => lets restore data as it was after schema creation
-      // nb: this is instantaneous (o(1))
-      console.log("Restoring DB");
-      this.backup?.restore();
+      this.restoreDB();
     }
-    console.log("DB Ready");
+    if (process.env.TEST_LOGGING) console.log("DB Ready");
     return this.orm;
   }
 
@@ -138,6 +129,21 @@ class InMemoryPostgresDB {
       await this.connection.close();
     }
   }
+
+  static backupDB(): void {
+    if (process.env.TEST_LOGGING) console.log("Backup DB");
+    // Then, create a backup of this empty database with created schema
+    // nb: this is instantaneous (o(1))
+    this.backup = this.db.backup();
+  }
+
+  static restoreDB(): void {
+    if (process.env.TEST_LOGGING) console.log("Restoring DB");
+    this.backup?.restore();
+  }
 }
 
-export const DB = process.env.OW_DATABASE_TEST ? InMemoryPostgresDB : PostgresDB;
+export const DB: typeof InMemoryPostgresDB | typeof PostgresDB = process.env.OW_DATABASE_TEST
+  ? InMemoryPostgresDB
+  : PostgresDB;
+export type { InMemoryPostgresDB, PostgresDB };

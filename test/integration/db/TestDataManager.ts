@@ -25,6 +25,7 @@ export class As {
   private userLoginService = new UserLoginService();
 
   private static adminInstance: As;
+  private static standingDataInstance: As;
   private currencies: Partial<Currency>[] = [];
   private institutions: Partial<Institution>[] = [];
   private accounts: Partial<Account>[] = [];
@@ -42,6 +43,13 @@ export class As {
     };
     this.adminInstance = await new As().init(adminUserLogin);
     return this.adminInstance;
+  }
+
+  static async StandingData(): Promise<As> {
+    this.standingDataInstance = new As();
+    this.standingDataInstance.userId = -1;
+    await this.standingDataInstance.initStandingData();
+    return this.standingDataInstance;
   }
 
   private async init(userLogin: UserLogin): Promise<this> {
@@ -68,15 +76,14 @@ export class As {
     return this;
   }
 
-  async initData(): Promise<this> {
-    // const testData = MockTestData.instance;
-    // init the "standing" data
-    // await this.currencyService.saveMultiple(testData.currencies);
-    // await this.institutionService.saveMultiple(testData.institutions);
+  async initStandingData(): Promise<this> {
+    this.generateCurrency();
+    this.generateCurrency();
+    this.generateInstitution();
+    this.generateInstitution();
 
-    // // TODO: refactor this into indiviudal generator/save functions
-    // await this.accountService.saveMultiple(testData.accounts);
-    // await this.transactionService.saveMultiple(testData.transactions);
+    await this.currencyService.saveMultiple(this.currencies);
+    await this.institutionService.saveMultiple(this.institutions);
 
     return this;
   }
@@ -112,7 +119,7 @@ export class As {
     this.institutions.push({
       credentialsType: CredentialsType.OAUTH2,
       dataSource: DataSource.LOCAL,
-      fullName: `TESTACCOUNT${this.userId}-${this.institutions.length}`,
+      fullName: `TESTINSTITUTION${this.userId}-${this.institutions.length}`,
       owningUserId: this.userId,
     });
     return this;

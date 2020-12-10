@@ -1,10 +1,14 @@
 import request from "supertest";
 import { app } from "@api/app";
 import { As } from "@test/integration/db/TestDataManager";
-import { DB } from "@db/db";
+import { DB, InMemoryPostgresDB } from "@db/db";
 
 beforeAll(async () => {
   await DB.init();
+});
+
+beforeEach(async () => {
+  (DB as typeof InMemoryPostgresDB).restoreDB();
 });
 
 afterAll(async () => {

@@ -1,10 +1,14 @@
 import { UserLoginService } from "@service/UserLoginService";
-import { DB } from "@db/db";
 import { As } from "../db/TestDataManager";
 import { UserLogin } from "@db/entity/UserLogin";
+import { DB, InMemoryPostgresDB } from "@db/db";
 
 beforeAll(async () => {
   await DB.init();
+});
+
+beforeEach(async () => {
+  (DB as typeof InMemoryPostgresDB).restoreDB();
 });
 
 afterAll(async () => {

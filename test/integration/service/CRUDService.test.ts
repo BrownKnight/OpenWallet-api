@@ -4,11 +4,6 @@ import { Currency } from "@db/entity/Currency";
 import { Institution } from "@db/entity/Institution";
 import { OWEntity } from "@db/entity/OWEntity";
 import { Transaction } from "@db/entity/Transaction";
-import { AccountService } from "@service/AccountService";
-import { BaseEntityService } from "@service/BaseEntityService";
-import { CurrencyService } from "@service/CurrencyService";
-import { InstitutionService } from "@service/InstitutionService";
-import { TransactionService } from "@service/TransactionService";
 import { As } from "../db/TestDataManager";
 
 beforeAll(async () => {
@@ -27,17 +22,12 @@ afterAll(async () => {
   await DB.close();
 });
 
-describe.each([
-  [Currency, CurrencyService],
-  [Account, AccountService],
-  [Transaction, TransactionService],
-  [Institution, InstitutionService],
-])(
+describe.each([[Currency], [Account], [Transaction], [Institution]])(
   "CRUD Operations for %p",
-  (entityClass: new () => OWEntity, entityService: new () => BaseEntityService<OWEntity>) => {
+  (entityClass: new () => OWEntity) => {
     it("is able to save and retrieve a new entity", async () => {
       const admin = await As.Admin();
-      const service = new entityService();
+      const service = admin.getService(entityClass);
 
       const newEntity = admin.generate(entityClass).getData(entityClass).pop() as OWEntity;
 
@@ -55,7 +45,7 @@ describe.each([
 
     it("is able to delete a newly created entity", async () => {
       const admin = await As.Admin();
-      const service = new entityService();
+      const service = admin.getService(entityClass);
 
       const newEntity = admin.generate(entityClass).getData(entityClass).pop() as OWEntity;
 
@@ -73,7 +63,7 @@ describe.each([
 
     it("is able to save multiple entities at once", async () => {
       const admin = await As.Admin();
-      const service = new entityService();
+      const service = admin.getService(entityClass);
 
       const newEntities = admin.generate(entityClass).getData(entityClass);
 

@@ -14,14 +14,15 @@ import { UserLoginService } from "@service/UserLoginService";
 import { UserService } from "@service/UserService";
 import { CredentialsType } from "@db/entity/enum/CredentialsType";
 import { DataSource } from "@db/entity/enum/DataSource";
+import { BaseEntityService } from "@service/BaseEntityService";
 
 export class As {
   private userId!: number;
 
-  private accountService = new AccountService();
+  private accountService!: AccountService;
   private currencyService = new CurrencyService();
   private institutionService = new InstitutionService();
-  private transactionService = new TransactionService();
+  private transactionService!: TransactionService;
   private userLoginService = new UserLoginService();
 
   private static adminInstance: As;
@@ -36,7 +37,7 @@ export class As {
   static async Admin(): Promise<As> {
     const adminUserLogin: UserLogin = {
       id: 1,
-      owningUserId: 1,
+      owningUserId: -1,
       userRole: UserRole.ADMIN,
       username: "Admin",
       password: "TESTPASSWORD",
@@ -60,7 +61,7 @@ export class As {
       emailAddress: `${userLogin.username}@OW.email`,
       firstName: `${userLogin.username}.fname`,
       lastName: `${userLogin.username}.lname`,
-      owningUserId: 1,
+      owningUserId: -1,
     } as User;
     const savedUser = (await userService.save(user)).entities[0];
 
@@ -72,6 +73,9 @@ export class As {
 
     this.userId = saved.entities?.[0].id ?? -1;
     this.userLogins.push(saved.entities[0]);
+
+    this.accountService = new AccountService(this.userId);
+    this.transactionService = new TransactionService(this.userId);
 
     return this;
   }
@@ -107,6 +111,23 @@ export class As {
     return [];
   }
 
+  getService<TEntity extends AnyOWEntity>(entityClass: new () => TEntity): BaseEntityService<TEntity> {
+    switch (entityClass) {
+      case Currency:
+        return this.currencyService as BaseEntityService<TEntity>;
+      case Institution:
+        return this.institutionService as BaseEntityService<TEntity>;
+      case Account:
+        return this.accountService as BaseEntityService<TEntity>;
+      case Transaction:
+        return this.transactionService as BaseEntityService<TEntity>;
+      case UserLogin:
+        return (this.userLoginService as unknown) as BaseEntityService<TEntity>;
+    }
+    console.error(`Couldn't find test data for ${entityClass}!`);
+    return {} as BaseEntityService<TEntity>;
+  }
+
   generate<TEntity extends AnyOWEntity>(entityClass: new () => TEntity): this {
     switch (entityClass) {
       case Currency:
@@ -131,7 +152,7 @@ export class As {
     this.currencies.push({
       currencyCode: `TEST${this.userId}-${this.currencies.length}`,
       currencySymbol: `T${this.userId}-${this.currencies.length}`,
-      owningUserId: this.userId,
+      owningUserId: -1,
     });
     return this;
   }
@@ -141,7 +162,7 @@ export class As {
       credentialsType: CredentialsType.OAUTH2,
       dataSource: DataSource.LOCAL,
       fullName: `TESTINSTITUTION${this.userId}-${this.institutions.length}`,
-      owningUserId: this.userId,
+      owningUserId: -1,
     });
     return this;
   }

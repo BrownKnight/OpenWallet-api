@@ -4,17 +4,15 @@ import { ServiceResponse } from "@service/responses/ServiceResponse";
 
 export abstract class BaseEntityService<TEntity extends OWEntity> {
   protected dao: BaseDAO<TEntity>;
-  protected defaultRelations: string[];
 
-  constructor(entityDAO: new () => BaseDAO<TEntity>, defaultRelations: string[] = []) {
-    this.dao = new entityDAO();
-    this.defaultRelations = defaultRelations;
+  constructor(entityDAO: new (userId: number) => BaseDAO<TEntity>, userId: number) {
+    this.dao = new entityDAO(userId);
   }
 
   async getAll(): Promise<ServiceResponse<TEntity>> {
     const response = new ServiceResponse<TEntity>();
 
-    response.entities = await this.dao.getAll({ relations: this.defaultRelations });
+    response.entities = await this.dao.getAll();
 
     return response;
   }
@@ -22,7 +20,7 @@ export abstract class BaseEntityService<TEntity extends OWEntity> {
   async getById(id: number): Promise<ServiceResponse<TEntity>> {
     let response = new ServiceResponse<TEntity>();
 
-    const entity = await this.dao.getByID(id, { relations: this.defaultRelations });
+    const entity = await this.dao.getByID(id);
     if (entity) {
       response.entities = [entity];
     } else {

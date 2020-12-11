@@ -3,7 +3,7 @@ import { Transaction } from "@db/entity/Transaction";
 import { BaseEntityService } from "@service/BaseEntityService";
 
 export class TransactionService extends BaseEntityService<Transaction> {
-  constructor() {
-    super(TransactionDAO, ["currency"]);
+  constructor(userId: number) {
+    super(TransactionDAO, userId);
   }
 }

@@ -4,6 +4,6 @@ import { BaseEntityService } from "@service/BaseEntityService";
 
 export class UserService extends BaseEntityService<User> {
   constructor() {
-    super(UserDAO);
+    super(UserDAO, -1);
   }
 }

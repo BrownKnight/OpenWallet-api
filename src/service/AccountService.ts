@@ -3,7 +3,7 @@ import { Account } from "@db/entity/Account";
 import { BaseEntityService } from "@service/BaseEntityService";
 
 export class AccountService extends BaseEntityService<Account> {
-  constructor() {
-    super(AccountDAO, ["institution"]);
+  constructor(userId: number) {
+    super(AccountDAO, userId);
   }
 }

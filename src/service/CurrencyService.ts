@@ -4,6 +4,6 @@ import { BaseEntityService } from "@service/BaseEntityService";
 
 export class CurrencyService extends BaseEntityService<Currency> {
   constructor() {
-    super(CurrencyDAO);
+    super(CurrencyDAO, -1);
   }
 }

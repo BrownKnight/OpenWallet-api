@@ -4,6 +4,6 @@ import { BaseEntityService } from "@service/BaseEntityService";
 
 export class InstitutionService extends BaseEntityService<Institution> {
   constructor() {
-    super(InstitutionDAO);
+    super(InstitutionDAO, -1);
   }
 }

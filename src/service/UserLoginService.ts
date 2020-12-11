@@ -10,14 +10,14 @@ import { UserRole } from "@db/entity/enum/UserRole";
 
 export class UserLoginService extends BaseEntityService<UserLogin> {
   constructor() {
-    super(UserLoginDAO);
+    super(UserLoginDAO, -1);
   }
 
   /** Fetches UserLogins with the user relation field loaded */
   async getAll(): Promise<ServiceResponse<UserLogin>> {
     const response = new ServiceResponse<UserLogin>();
 
-    response.entities = await this.dao.getAll({ relations: ["user"] });
+    response.entities = await this.dao.getAll();
 
     return response;
   }
@@ -26,7 +26,7 @@ export class UserLoginService extends BaseEntityService<UserLogin> {
   async getById(id: number): Promise<ServiceResponse<UserLogin>> {
     let response = new ServiceResponse<UserLogin>();
 
-    const entity = await this.dao.getByID(id, { relations: ["user"] });
+    const entity = await this.dao.getByID(id);
     if (entity) {
       response.entities = [entity];
     } else {
